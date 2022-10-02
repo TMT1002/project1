@@ -29,7 +29,7 @@ const middlewareController = {
             if(req.user.admin){
                 next();
             }else{
-                res.status(403).json("you can not delete user!!!");
+                res.status(403).json("you can not use!!!");
             }
         });
     }
