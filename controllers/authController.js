@@ -52,7 +52,7 @@ const loginUsers = async(req,res) => {
                         const accessToken = jwt.sign({
                             id: results.rows[0].user_id,
                             admin: results.rows[0].admin
-                        },process.env.ACCESS_TOKEN,{expiresIn: "30s"})
+                        },process.env.ACCESS_TOKEN,{expiresIn: "1d"})
                         const user = results.rows[0];
                         res.status(200).json({user,accessToken});
                     })

@@ -22,6 +22,16 @@ const middlewareController = {
         else{
             res.status(401).json("you are not authenticated");
         }
+    },
+
+    verifyTokenAdmin: (req,res,next)=>{
+        middlewareController.verifyToken(req,res,()=>{
+            if(req.user.admin){
+                next();
+            }else{
+                res.status(403).json("you can not delete user!!!");
+            }
+        });
     }
 }
 
