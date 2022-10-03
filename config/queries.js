@@ -12,7 +12,7 @@ const getUserById = "SELECT*FROM users s WHERE s.user_id = $1"
 const deleteUserById = "DELETE FROM users WHERE user_id = $1"
 const saveToken = "INSERT INTO tokens (user_id,token,refresh_token) VALUES ($1,$2,$3)";
 const getAllAnswer = "SELECT answer_id,answers.content,correct FROM answers INNER JOIN questions ON questions.question_id = answers.question_id ORDER BY answer_id ASC";
-const getAnswer = "SELECT answer_id,answers.content,correct FROM answers INNER JOIN questions ON questions.question_id = answers.question_id WHERE answers.question_id = $1"
+const getAnswer = "SELECT answer_id,question,answers.content,correct FROM answers INNER JOIN questions ON questions.question_id = answers.question_id WHERE answers.question_id = $1"
 
 
 module.exports = {getAllQuestions,

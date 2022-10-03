@@ -15,17 +15,10 @@ const getAllQuestions = async (req,res) => {
 
 const getQuestionById = async (req,res) => {
     try {
-        var question;
-        const awaitQuestion = await client.query(queries.getQuestionById,[req.params.id],(err,results) =>{
-            if(err) throw err;
-            console.log(results.rows);
-        })
-        console.log(question);
         client.query(queries.getAnswer,[req.params.id],(err,answer) =>{
             if(err) throw err;
-            answer = answer.rows
+            res.status(200).json(answer.rows);
         })
-        res.status(200).json(question);
     } catch (error) {
         res.status(500).json(err);
     }
