@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
 const cors = require("cors");
-const queries = require("./queries");
+const queries = require("./config/queries");
 const client = require('./config/connection');
 const express = require('express');
 const app = express();

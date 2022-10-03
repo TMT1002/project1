@@ -1,5 +1,5 @@
 const client = require("../config/connection");
-const queries = require("../queries");
+const queries = require("../config/queries");
 
 const getAllUser = async (req,res) => {
     try {
