@@ -10,6 +10,8 @@ const getUserByAccount = "SELECT*FROM users s WHERE s.account = $1";
 const getQuestionById = "SELECT*FROM questions WHERE questions.question_id = $1";
 const getUserById = "SELECT*FROM users s WHERE s.user_id = $1" 
 const deleteUserById = "DELETE FROM users WHERE user_id = $1"
+const saveToken = "INSERT INTO tokens (user_id,token,refresh_token) VALUES ($1,$2,$3)";
+
 
 module.exports = {getAllQuestions,
     getAllUser,
@@ -22,5 +24,6 @@ module.exports = {getAllQuestions,
     getUserByAccount,
     getQuestionById,
     getUserById,
-    deleteUserById
+    deleteUserById,
+    saveToken
 };

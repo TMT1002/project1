@@ -52,9 +52,16 @@ const loginUsers = async(req,res) => {
                         const accessToken = jwt.sign({
                             id: results.rows[0].user_id,
                             admin: results.rows[0].admin
-                        },process.env.ACCESS_TOKEN,{expiresIn: "1d"})
+                        },process.env.ACCESS_TOKEN,{expiresIn: "2h"})
+                        const refreshToken = jwt.sign({
+                            id: results.rows[0].user_id,
+                            admin: results.rows[0].admin
+                        },process.env.REFRESH_TOKEN,{expiresIn: "7d"})
                         const user = results.rows[0];
-                        res.status(200).json({user,accessToken});
+                        res.status(200).json({user,accessToken,refreshToken});
+                        client.query(queries.saveToken,[user.user_id,accessToken,refreshToken],(err,results) => {
+                            if(err) throw err;
+                        })
                     })
                 }
                 else{
