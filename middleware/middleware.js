@@ -16,7 +16,6 @@ const middlewareController = {
                     console.log(user);
                     next();
                 }
-                
             })
         }
         else{
