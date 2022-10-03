@@ -1,4 +1,4 @@
-const client = require("../connection");
+const client = require("../config/connection");
 const queries = require("../queries");
 
 
