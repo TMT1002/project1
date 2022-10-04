@@ -19,21 +19,7 @@ const session = sequelize.define("session", {
     access_token: {
         type: DataTypes.TEXT,
         allowNull: false
-    },
-    created_ad: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
     }
-})
+});
 
-(async function() {
-    await sequelize.sync().then(() => {
-      console.log("Sync session Table success!");
-    });
-  })().catch((error) => {
-    console.log("Sync session Table fail!");
-    console.log(err);
-  });
-  
-  module.exports = session;
+module.exports = session;

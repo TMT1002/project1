@@ -5,7 +5,7 @@ const sequelize = new Sequelize('PROJECT1', 'postgres', 'vuthu1201', {
     dialect: 'postgres',
 });   
 
-let connectDB = async () => {
+const connectDB = async () => {
     try {
         await sequelize.authenticate();
         console.log('Connection has been established successfully.');
@@ -14,4 +14,4 @@ let connectDB = async () => {
     }
 }
 
-module.exports = connectDB;
+module.exports = {connectDB,sequelize};

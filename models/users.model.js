@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes} = require("sequelize");
 const { sequelize } = require("./connectionDB");
 
 const users = sequelize.define("users", {
@@ -33,21 +33,16 @@ const users = sequelize.define("users", {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false
-    },
-    created_at: {type: DataTypes.DATE,
-    defaultValue: DataTypes.NOW,
-    allowNull: false
     }
 });
-
 
 (async function() {
     await sequelize.sync().then(() => {
       console.log("Sync users Table success!");
     });
-  })().catch((error) => {
+  })().catch((err) => {
     console.log("Sync Users Table fail!");
     console.log(err);
   });
   
-  module.exports = users;
+module.exports = users;
