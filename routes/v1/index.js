@@ -8,6 +8,10 @@ const defaultRoutes = [
   {
     path: '/',
     route: homeRoute,
+  },
+  {
+    path: '/auth',
+    route: authRoute,
   }
 ];
 
