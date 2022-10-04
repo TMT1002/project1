@@ -10,5 +10,7 @@ router.post("/addAnswer",adminController.addAnswer);
 router.get("/getAllUser",adminController.getAllUser);
 //delete user
 router.delete("/delete/:id",adminController.deleteUserById);
+//CREATE Question
+router.post("/createQuestion",adminController.createQuestion);
 
 module.exports = router;

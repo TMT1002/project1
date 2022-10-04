@@ -15,15 +15,6 @@ const questions = sequelize.define("questions", {
     }
 });
 
-questions.hasMany(results,{
-    foreignKey: 'questions_id',
-})
-results.belongsTo(questions);
-
-questions.hasMany(answers,{
-    foreignKey: 'questions_id',
-})
-answers.belongsTo(questions);
 
 (async function() {
     await sequelize.sync().then(() => {

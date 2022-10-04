@@ -26,9 +26,36 @@ const deleteUserById = async(req,res) => {
     }
 }
 
+//CREATE question
+const createQuestion = async(req,res) => {
+    try {
+        const {question,answer} = req.body;
+        const newQuestion = await questions.create({
+            "content" : req.body.content
+        });
+        console.log(newQuestion.id)
+        answer.forEach(async (currentValue) => {
+            await answers.create({
+                "question_id": newQuestion.id,
+                "answer_id" : currentValue.answer_id,
+                "content" : currentValue.content,
+                "correct" : currentValue.correct
+            });
+        });
+        if(!newQuestion){
+            res.status(404).json("Can not add new questions");
+        };
+        res.status(200).json({message: "Created Successfully!",question: req.body});;
+    } catch (error) {
+        res.status(500).json(error);
+    }
+}
+
 //ADD new question
 const addQuestion = async(req,res) => {
     try {
+        const {question,answer} = req.body;
+        console.log(answer);
         const newQuestion = await questions.create({
             "content" : req.body.content
         });
@@ -59,5 +86,6 @@ module.exports = {
     getAllUser,
     deleteUserById,
     addQuestion,
-    addAnswer
+    addAnswer,
+    createQuestion
 };

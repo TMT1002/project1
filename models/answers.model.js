@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require("./connectionDB");
-const {results} = require("./index")
+const {results,questions} = require("./index")
 
 const answers = sequelize.define("answers", {
     id: {
@@ -17,6 +17,10 @@ const answers = sequelize.define("answers", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
+    content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+    },
     correct: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -24,8 +28,10 @@ const answers = sequelize.define("answers", {
     }
 });
 
-answers.hasMany(results);
-results.belongsTo(answers);
+questions.hasMany(answers, { foreignKey: 'question_id' });
+answers.belongsTo(questions, { foreignKey: 'question_id', targetKey: 'id' });
+
+
 
 (async function() {
     await sequelize.sync().then(() => {

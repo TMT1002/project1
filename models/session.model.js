@@ -25,6 +25,14 @@ const session = sequelize.define("session", {
 });
 
 
+users.hasOne(session,{
+    foreignKey: 'user_id'
+});
+session.belongsTo(users,{
+    foreignKey: 'user_id'
+});
+
+
 (async function() {
     await sequelize.sync().then(() => {
       console.log("Sync session Table success!");
