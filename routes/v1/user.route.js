@@ -1,8 +1,8 @@
 
 const {Router} = require("express"); 
 const router = Router();
-const userController = require("../controllers/userController");
-const middlewareController = require("../middleware/middleware")
+const userController = require("../../controllers/userController");
+const middlewareController = require("../../middleware/middleware")
 
 //GET ALL USERS
 router.get("/",middlewareController.verifyTokenAdmin,userController.getAllUser);
