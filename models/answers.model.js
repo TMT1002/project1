@@ -17,10 +17,6 @@ const answers = sequelize.define("answers", {
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    content:{
-        type: DataTypes.TEXT,
-        allowNull: false,
-    },
     correct: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
@@ -28,9 +24,7 @@ const answers = sequelize.define("answers", {
     }
 });
 
-answers.hasMany(results,{
-    foreignKey: 'answer_id'
-});
+answers.hasMany(results);
 results.belongsTo(answers);
 
 (async function() {
