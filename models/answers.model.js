@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require("./connectionDB");
+const {results} = require("./index")
 
 const answers = sequelize.define("answers", {
     id: {
@@ -26,6 +27,11 @@ const answers = sequelize.define("answers", {
         defaultValue: false
     }
 });
+
+answers.hasMany(results,{
+    foreignKey: 'answer_id'
+});
+results.belongsTo(answers);
 
 (async function() {
     await sequelize.sync().then(() => {

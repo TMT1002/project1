@@ -1,5 +1,7 @@
 const { DataTypes } = require('sequelize');
+const {users} = require("./index")
 const { sequelize } = require("./connectionDB");
+
 
 const session = sequelize.define("session", {
     id: {
@@ -21,6 +23,7 @@ const session = sequelize.define("session", {
         allowNull: false
     }
 });
+
 
 (async function() {
     await sequelize.sync().then(() => {
