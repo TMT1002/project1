@@ -3,10 +3,10 @@ const { sequelize } = require("./connectionDB");
 
 const users = sequelize.define("users", {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      allowNull: false,
-      primaryKey: true
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
     },
     first_name: {
         type: DataTypes.STRING(20),
