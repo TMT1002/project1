@@ -1,5 +1,6 @@
 const { DataTypes} = require("sequelize");
 const { sequelize } = require("./connectionDB");
+const {session} = require("./index")
 
 const users = sequelize.define("users", {
     id: {
@@ -36,6 +37,10 @@ const users = sequelize.define("users", {
     }
 });
 
+users.hasMany(session,{
+    foreignKey: "user_id",
+});
+
 (async function() {
     await sequelize.sync().then(() => {
       console.log("Sync users Table success!");
@@ -43,6 +48,6 @@ const users = sequelize.define("users", {
   })().catch((err) => {
     console.log("Sync Users Table fail!");
     console.log(err);
-  });
+});
   
 module.exports = users;

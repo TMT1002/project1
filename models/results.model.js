@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require("./connectionDB");
 
-const session = sequelize.define("session", {
+const results = sequelize.define("results", {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -10,25 +10,29 @@ const session = sequelize.define("session", {
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    refresh_token: {
-        type: DataTypes.TEXT,
         allowNull: false
     },
-    access_token: {
-        type: DataTypes.TEXT,
+    questions_id: {
+        type: DataTypes.INTEGER,
         allowNull: false
+    },
+    answer_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    user_choice: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
     }
 });
 
 (async function() {
     await sequelize.sync().then(() => {
-      console.log("Sync session Table success!");
+      console.log("Sync results Table success!");
     });
   })().catch((err) => {
-    console.log("Sync session Table fail!");
+    console.log("Sync results Table fail!");
     console.log(err);
 });
 
-module.exports = session;
+module.exports = results;

@@ -4,7 +4,7 @@ const express = require('express');
 const app = express();
 const cookieParser = require("cookie-parser");
 const connectDB = require("./models/connectionDB");
-const { users, session } = require('./models');
+const { users, session, questions } = require('./models');
 
 
 dotenv.config();
@@ -20,8 +20,7 @@ app.listen(8000, ()=>{
 })
 
 app.get('/', async (req, res)=>{
-    const token = await session.
-    create({
+    const token = await session.create({
         user_id: 22123134,
         refresh_token: "1231dwdedrf23r",
         access_token: "cehwf83"
