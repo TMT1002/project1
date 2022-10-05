@@ -18,6 +18,21 @@
     "prettier": "^2.7.1"
   },
   "scripts": {
-    "format": "prettier --write ."
-  }
+    "format": "prettier --write .",
+    "start": "node server.js"
+  },
+  "name": "project1",
+  "version": "1.0.0",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TMT1002/project1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TMT1002/project1/issues"
+  },
+  "homepage": "https://github.com/TMT1002/project1#readme",
+  "description": ""
 }

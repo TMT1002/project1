@@ -1,5 +1,6 @@
 const { questions, answers, results } = require('../models');
 
+//GET all question
 const getAllQuestion = async (req, res) => {
   try {
     const allQuestions = await questions.findAll({ include: answers });
@@ -12,6 +13,7 @@ const getAllQuestion = async (req, res) => {
   }
 };
 
+//CREATE answer
 const createAnswer = async (req,res) => {
   try {
     const {user_id,answers} = req.body.message;
