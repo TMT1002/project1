@@ -7,8 +7,8 @@ const middlewareController = require("../../middleware/auth.middleware");
 //GET All questions
 router.get("/getAllQuestions",middlewareController.verifyToken,userController.getAllQuestion);
 //GET All user
-router.get("/admin/getAllUser",adminController.getAllUser);
+router.get("/admin/getAllUser",middlewareController.verifyTokenAdmin,adminController.getAllUser);
 //DELETE user
-router.delete("/admin/delete/:id",adminController.deleteUserById);
+router.delete("/admin/delete/:id",middlewareController.verifyTokenAdmin,adminController.deleteUserById);
 
 module.exports = router;

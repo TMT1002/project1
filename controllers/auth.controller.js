@@ -1,6 +1,7 @@
 const bcrypt = require("bcrypt");
 const {users} = require("../models")
 const jwt = require("jsonwebtoken");
+const {session} = require("../models")
 
 const registerUser = async(req,res) => {
     try {
@@ -28,14 +29,27 @@ const loginUser = async(req,res) => {
             res.status(404).json("Wrong password!")
         }
         if(user && validPassword){
-            const accessToken = jwt.sign({
+            const deleteToken = await session.destroy({ where: { user_id: user.id }});
+            const accessToken = await jwt.sign({
                 id: user.id,
                 admin: user.admin
                 },
                 process.env.ACCESS_TOKEN,
-                {expiresIn: "5m"}
+                {expiresIn: "2h"}
             );
-            res.status(200).json({user,accessToken});
+            const refreshToken = await jwt.sign({
+                id: user.id,
+                admin: user.admin
+                },
+                process.env.REFRESH_TOKEN,
+                {expiresIn: "7d"}
+            );
+            const createSession = await session.create({
+                "user_id": user.id,
+                "refresh_token": refreshToken,
+                "access_token": accessToken
+            })
+            res.status(200).json({user,accessToken,refreshToken});
         }
     } catch (error) {
         res.status(500).json(error);
