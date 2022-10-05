@@ -1,10 +1,10 @@
-const dotenv = require("dotenv");
-const cors = require("cors");
+const dotenv = require('dotenv');
+const cors = require('cors');
 const express = require('express');
 const app = express();
-const cookieParser = require("cookie-parser");
-const connectDB = require("./models/connectionDB");
-const route = require("./routes/v1");
+const cookieParser = require('cookie-parser');
+const connectDB = require('./models/connectionDB');
+const route = require('./routes/v1');
 
 dotenv.config();
 
@@ -16,14 +16,8 @@ app.use(cors());
 connectDB.connectDB();
 
 //Route
-app.use("/v1",route);
+app.use('/v1', route);
 
-app.listen(8000, ()=>{
-    console.log("Sever is now listening at port 8000");
-})
-
-
-
-
-
-
+app.listen(8000, () => {
+  console.log('Sever is now listening at port 8000');
+});

@@ -12,5 +12,12 @@
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.11.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.24.0",
+    "prettier": "^2.7.1"
+  },
+  "scripts": {
+    "format": "prettier --write ."
   }
 }

@@ -1,45 +1,42 @@
 const { DataTypes } = require('sequelize');
-const {users} = require("./index")
-const { sequelize } = require("./connectionDB");
+const { users } = require('./index');
+const { sequelize } = require('./connectionDB');
 
-
-const session = sequelize.define("session", {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        allowNull: false,
-        primaryKey: true
-    },
-    user_id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-    },
-    refresh_token: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
-    access_token: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    }
+const session = sequelize.define('session', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    allowNull: false,
+    primaryKey: true,
+  },
+  user_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  refresh_token: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  access_token: {
+    type: DataTypes.TEXT,
+    allowNull: false,
+  },
 });
 
-
-users.hasOne(session,{
-    foreignKey: 'user_id'
+users.hasOne(session, {
+  foreignKey: 'user_id',
 });
-session.belongsTo(users,{
-    foreignKey: 'user_id'
+session.belongsTo(users, {
+  foreignKey: 'user_id',
 });
 
-
-(async function() {
-    await sequelize.sync().then(() => {
-      console.log("Sync session Table success!");
-    });
-  })().catch((err) => {
-    console.log("Sync session Table fail!");
-    console.log(err);
+(async function () {
+  await sequelize.sync().then(() => {
+    console.log('Sync session Table success!');
+  });
+})().catch(err => {
+  console.log('Sync session Table fail!');
+  console.log(err);
 });
 
 module.exports = session;
