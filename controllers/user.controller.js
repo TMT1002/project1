@@ -31,6 +31,7 @@ const createAnswer = async (req,res) => {
   }
 }
 
+
 module.exports = { getAllQuestion,createAnswer};
 
 

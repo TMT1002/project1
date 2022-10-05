@@ -24,6 +24,7 @@ const results = sequelize.define('results', {
   user_choice: {
     type: DataTypes.BOOLEAN,
     allowNull: true,
+    defaultValue: false
   },
 });
 questions.hasMany(results, { foreignKey: 'questions_id' });
