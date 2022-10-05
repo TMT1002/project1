@@ -6,7 +6,6 @@ const getAllQuestion = async(req,res) => {
         if(!allQuestions){
             res.status(404).json("Can not get all question!");
         }
-        console.log(allQuestions);
         res.status(200).json(allQuestions);
     } catch (error) {
         res.status(500).json(error);

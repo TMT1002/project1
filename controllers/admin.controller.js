@@ -5,7 +5,6 @@ const { sync } = require("../models/results.model");
 const getAllUser = async(req,res) => {
     try {
         const allUser = await users.findAll();
-        console.log(allUser);
         res.status(200).json(allUser);
     } catch (error) {
         res.status(500).json(error);
@@ -33,7 +32,6 @@ const createQuestion = async(req,res) => {
         const newQuestion = await questions.create({
             "content" : req.body.content
         });
-        console.log(newQuestion.id)
         answer.forEach(async (currentValue) => {
             await answers.create({
                 "question_id": newQuestion.id,
