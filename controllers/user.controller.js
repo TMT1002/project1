@@ -16,10 +16,9 @@ const getAllQuestion = async (req, res) => {
 //CREATE answer
 const createAnswer = async (req,res) => {
   try {
-    let checkAnswer = 1;
+    let checkAnswer = 1, select = [];
     const {user_id,answer} = req.body.message;
-
-    for(let i = 0; i<answer.length; i++){
+    for(let i = answer.length - 1; i >=0; i--){
       await results.create({
         user_id: user_id,
         questions_id: answer[i].question_id,
@@ -30,14 +29,20 @@ const createAnswer = async (req,res) => {
       if(check[0].dataValues.correct != answer[i].user_choice){
         checkAnswer = 0;
       }
-      if((answer[i].answer_id == 1&&i>0)||i == answer.length-1){
+      if(answer[i].user_choice == true){
+        select.push(answer[i].answer_id);
+      }
+      if(answer[i].answer_id == 1){
         await scores.create({
           user_id: user_id,
-          score : checkAnswer
+          question_id: answer[i].question_id,
+          user_choice: String(select),
+          correct : checkAnswer
         });
+        console.log(select);
         checkAnswer = 1;
+        select = [];
       }
-
     }
     res.status(200).json("Created answer successfully!");
   } catch (error) {

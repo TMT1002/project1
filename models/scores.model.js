@@ -1,5 +1,5 @@
 const { DataTypes } = require('sequelize');
-const { users } = require('./index');
+const { users,questions } = require('./index');
 const { sequelize } = require('./connectionDB');
 
 const scores = sequelize.define('scores', {
@@ -13,14 +13,26 @@ const scores = sequelize.define('scores', {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    score: {
+    question_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    user_choice: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    correct: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValueL: false
     }
 });
 
 users.hasMany(scores, { foreignKey: 'user_id' });
 scores.belongsTo(users, { foreignKey: 'user_id' });
+
+questions.hasMany(scores, { foreignKey: 'question_id' });
+scores.belongsTo(questions, { foreignKey: 'question_id' });
 
 (async function () {
   await sequelize.sync().then(() => {
