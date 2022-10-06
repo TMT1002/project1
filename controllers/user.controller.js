@@ -18,6 +18,7 @@ const createAnswer = async (req,res) => {
   try {
     let checkAnswer = 1, select = [];
     const {user_id,answer} = req.body.message;
+    await results.destroy({ where: {user_id: user_id } });
     for(let i = answer.length - 1; i >=0; i--){
       await results.create({
         user_id: user_id,
@@ -50,7 +51,16 @@ const createAnswer = async (req,res) => {
   }
 };
 
+const getResult = async (req,res) => {
+  try {
+    const result = await scores.findAll({ where: { user_id: [1] } });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
 
-module.exports = { getAllQuestion,createAnswer};
+
+module.exports = { getAllQuestion,createAnswer,getResult};
 
 
