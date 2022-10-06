@@ -1,4 +1,4 @@
-const { questions, answers, results } = require('../models');
+const { questions, answers, results, scores } = require('../models');
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -16,20 +16,34 @@ const getAllQuestion = async (req, res) => {
 //CREATE answer
 const createAnswer = async (req,res) => {
   try {
-    const {user_id,answers} = req.body.message;
-    answers.forEach(async currentValue => {
+    let checkAnswer = 1;
+    const {user_id,answer} = req.body.message;
+
+    for(let i = 0; i<answer.length; i++){
       await results.create({
         user_id: user_id,
-        questions_id: currentValue.question_id,
-        answer_id: currentValue.answer_id,
-        user_choice: currentValue.user_choice
+        questions_id: answer[i].question_id,
+        answer_id: answer[i].answer_id,
+        user_choice: answer[i].user_choice
       });
-    });
-    res.status(200).json("The answer has been sent successfully!")
+      const check = await answers.findAll({where: {question_id: [answer[i].question_id], answer_id: [answer[i].answer_id] }}); 
+      if(check[0].dataValues.correct != answer[i].user_choice){
+        checkAnswer = 0;
+      }
+      if((answer[i].answer_id == 1&&i>0)||i == answer.length-1){
+        await scores.create({
+          user_id: user_id,
+          score : checkAnswer
+        });
+        checkAnswer = 1;
+      }
+
+    }
+    res.status(200).json("Created answer successfully!");
   } catch (error) {
     res.status(500).json(error);
   }
-}
+};
 
 
 module.exports = { getAllQuestion,createAnswer};

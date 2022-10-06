@@ -33,8 +33,6 @@ results.belongsTo(questions, { foreignKey: 'questions_id' });
 users.hasMany(results, { foreignKey: 'user_id' });
 results.belongsTo(users, { foreignKey: 'user_id' });
 
-answers.hasMany(results, { foreignKey: 'answer_id' });
-results.belongsTo(answers, { foreignKey: 'answer_id' });
 
 (async function () {
   await sequelize.sync().then(() => {

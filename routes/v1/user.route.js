@@ -8,6 +8,9 @@ const middlewareController = require('../../middleware/auth.middleware');
 router.get('/getAllQuestions', middlewareController.verifyToken, userController.getAllQuestion);
 //GET All user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
+//GET result
+// router.get('/getResult',userController.getResult);
+
 //DELETE user
 router.delete(
   '/admin/delete/:id',
@@ -17,4 +20,7 @@ router.delete(
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.createAnswer);
 
+
+
 module.exports = router;
+
