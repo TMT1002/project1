@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const { users,questions } = require('./index');
 const { sequelize } = require('./connectionDB');
 
-const scores = sequelize.define('scores', {
+const data = sequelize.define('data', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -21,6 +21,10 @@ const scores = sequelize.define('scores', {
       type: DataTypes.STRING,
       allowNull: false
     },
+    answer_correct: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
     correct: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
@@ -28,19 +32,19 @@ const scores = sequelize.define('scores', {
     }
 });
 
-users.hasMany(scores, { foreignKey: 'user_id' });
-scores.belongsTo(users, { foreignKey: 'user_id' });
+users.hasMany(data, { foreignKey: 'user_id' });
+data.belongsTo(users, { foreignKey: 'user_id' });
 
-questions.hasMany(scores, { foreignKey: 'question_id' });
-scores.belongsTo(questions, { foreignKey: 'question_id' });
+questions.hasMany(data, { foreignKey: 'question_id' });
+data.belongsTo(questions, { foreignKey: 'question_id' });
 
 (async function () {
   await sequelize.sync().then(() => {
-    console.log('Sync results Scores success!');
+    console.log('Sync results data success!');
   });
 })().catch(err => { 
-  console.log('Sync results Scores fail!');
+  console.log('Sync results data fail!');
   console.log(err);
 });
   
-module.exports = scores;
+module.exports = data;
