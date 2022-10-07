@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const { users } = require('../models');
 const jwt = require('jsonwebtoken');
 const { session } = require('../models');
-
+const { authService} = require('../services');
 
 const registerUser = async (req, res) => {
   try {
@@ -28,34 +28,16 @@ const loginUser = async (req, res) => {
       }
       if(validPassword) {
         const deleteToken = await session.destroy({ where: { user_id: user.id } });
-        const accessToken = await jwt.sign(
-          {
-            id: user.id,
-            admin: user.admin,
-          },
-          process.env.ACCESS_TOKEN,
-          { expiresIn: '15s' },
-        );
-        const refreshToken = await jwt.sign(
-          {
-            id: user.id,
-            admin: user.admin,
-          },
-          process.env.REFRESH_TOKEN,
-          { expiresIn: '7d' },
-        );
-        res.cookie("refreshToken",refreshToken,{
-          httpOnly: true,
-          secure: false,
-          path:"/",
-          sameSite: "strict"
-        });
+
+        const newAccessToken = authService.generateAccessToken(user);
+        const newRefreshToken = authService.generateRefreshToken(user);
+        authService.saveRefreshTokenInCookie(res,newRefreshToken);
         const createSession = await session.create({
           user_id: user.id,
-          refresh_token: refreshToken,
-          access_token: accessToken,
+          refresh_token: newRefreshToken,
+          access_token: newAccessToken,
         });
-        res.status(200).json({ user, accessToken, refreshToken});
+        res.status(200).json({user,newAccessToken,newRefreshToken});
       }
     }
   } catch (error) {
@@ -63,6 +45,7 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Request new access Token by refresh Token
 const reqRefreshToken = async (req,res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
