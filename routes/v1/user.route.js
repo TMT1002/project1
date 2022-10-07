@@ -3,6 +3,7 @@ const router = Router();
 const userController = require('../../controllers/user.controller');
 const adminController = require('../../controllers/admin.controller');
 const middlewareController = require('../../middleware/auth.middleware');
+const authController = require('../../controllers/auth.controller');
 
 //GET All questions
 router.get('/getAllQuestions', middlewareController.verifyToken, userController.getAllQuestion);
@@ -20,7 +21,8 @@ router.delete(
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.createAnswer);
 
-
+//Request refresh token
+router.post('/reqToken',authController.reqRefreshToken);
 
 module.exports = router;
 
