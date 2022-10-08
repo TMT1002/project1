@@ -5,9 +5,9 @@ const adminController = require('../../controllers/admin.controller');
 const middlewareController = require('../../middleware/auth.middleware');
 const authController = require('../../controllers/auth.controller');
 
-//GET All questions
+//GET all questions
 router.get('/getAllQuestions', middlewareController.verifyToken, userController.getAllQuestion);
-//GET All user
+//GET all user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
 //GET result
 router.get('/getResult',middlewareController.verifyToken,userController.getResults);
@@ -23,6 +23,8 @@ router.post('/createAnswer',middlewareController.verifyToken,userController.subm
 
 //Request refresh token
 router.post('/reqToken',authController.reqRefreshToken);
+//LOGOUT user
+router.post('/logout',middlewareController.verifyToken,userController.logout);
 
 module.exports = router;
 

@@ -1,4 +1,4 @@
-const { questions, answers, results, data} = require('../models');
+const { questions, answers, results, data, session} = require('../models');
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -78,5 +78,17 @@ const getResults = async (req,res) => {
   }
 }
 
-module.exports = {getAllQuestion,getResults,submit};
+//LOGOUT user
+const logout = async (req,res) => {
+  try {
+    const logout = await session.destroy({where: {user_id:req.user.id}});
+    if(logout){
+      res.status(200).json("Logout successfully!");
+    } 
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
+
+module.exports = {getAllQuestion,getResults,submit,logout};
 
