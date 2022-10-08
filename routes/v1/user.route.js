@@ -10,7 +10,7 @@ router.get('/getAllQuestions', middlewareController.verifyToken, userController.
 //GET All user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
 //GET result
-router.get('/getResult/:id',middlewareController.verifyToken,userController.getResult);
+router.get('/getResult',middlewareController.verifyToken,userController.getResult);
 
 //DELETE user
 router.delete(

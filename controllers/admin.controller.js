@@ -1,5 +1,4 @@
 const { users, questions, answers } = require('../models');
-const { sync } = require('../models/results.model');
 
 // GET All Users
 const getAllUser = async (req, res) => {

@@ -1,12 +1,25 @@
 const bcrypt = require('bcrypt');
-const { users } = require('../models');
 const jwt = require('jsonwebtoken');
-const { session } = require('../models');
+const { session,users} = require('../models');
 const { authService} = require('../services');
 const { generateAccessToken, generateRefreshToken, saveRefreshTokenInCookie } = require('../services/auth.service');
+const Op = require('Sequelize').Op;
 
+
+//CREATE USER
 const registerUser = async (req, res) => {
   try {
+    const checkEmail = await users.findAll({
+      where : {
+        [Op.or]: [
+          {email: { [Op.eq]: req.body.email}},
+          {account: {[Op.eq] :req.body.account}}
+        ]
+      }
+    })
+    if(checkEmail.length){ 
+      return res.status(400).json("Email or Account already exists!");
+    }
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashed;
@@ -17,6 +30,8 @@ const registerUser = async (req, res) => {
   }
 };
 
+
+//LOGIN User
 const loginUser = async (req, res) => {
   try {
     const user = await users.findOne({ where: { account: req.body.account } });
@@ -37,11 +52,9 @@ const loginUser = async (req, res) => {
           refresh_token: newRefreshToken,
           access_token: newAccessToken,
         });
-        // req["currentUser"] = user.dataValues;
-        console.log(req.currentUser);
         res.status(200).json({user,newAccessToken,newRefreshToken});
       }
-    }
+    };
   } catch (error) {
     res.status(500).json(error);
   }

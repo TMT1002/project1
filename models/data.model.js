@@ -29,6 +29,10 @@ const data = sequelize.define('data', {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValueL: false
+    },
+    session: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
 });
 

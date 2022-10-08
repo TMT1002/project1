@@ -7,28 +7,21 @@ const results = sequelize.define('results', {
     type: DataTypes.INTEGER,
     autoIncrement: true,
     allowNull: false,
-    primaryKey: true,
+    primaryKey: true
   },
   user_id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
-  questions_id: {
+  session: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
-  answer_id: {
+  score: {
     type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  user_choice: {
-    type: DataTypes.BOOLEAN,
-    allowNull: true,
-    defaultValue: false
-  },
+    allowNull: false
+  }
 });
-questions.hasMany(results, { foreignKey: 'questions_id' });
-results.belongsTo(questions, { foreignKey: 'questions_id' });
 
 users.hasMany(results, { foreignKey: 'user_id' });
 results.belongsTo(users, { foreignKey: 'user_id' });
