@@ -42,6 +42,7 @@ data.belongsTo(users, { foreignKey: 'user_id' });
 questions.hasMany(data, { foreignKey: 'question_id' });
 data.belongsTo(questions, { foreignKey: 'question_id' });
 
+
 (async function () {
   await sequelize.sync().then(() => {
     console.log('Sync results data success!');

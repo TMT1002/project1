@@ -1,4 +1,4 @@
-const { questions, answers, results, data } = require('../models');
+const { questions, answers, results, data} = require('../models');
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -52,13 +52,31 @@ const submit = async (req,res) => {
 }
 
 //GET results
-const getResult = async (req,res) => {
+const getResults = async (req,res) => {
   try {
-    
+    const getAllResultById = await results.findAll({
+      attributes: ["session","score"],
+      where: {
+        user_id: req.user.id
+      }
+    });
+    const getResultBySession = await Promise.all(getAllResultById.map(async(currentValue)=> {
+      return new Promise(async(resolve,reject) => {
+        const getResultAnswersInSession = await data.findAll({
+          attributes: ["question_id","user_choice","answer_correct","correct"],
+          where: {
+            session: currentValue.dataValues.session
+          }
+        });
+        const val = getResultAnswersInSession.map((value)=> value.dataValues);
+        resolve({session: currentValue.dataValues.session,score: currentValue.dataValues.score , results: val});
+      });
+    }));
+    res.status(200).json({userID: req.user.id, data: getResultBySession});
   } catch (error) {
     res.status(500).json(error);
   }
 }
 
-module.exports = {getAllQuestion,getResult,submit};
+module.exports = {getAllQuestion,getResults,submit};
 
