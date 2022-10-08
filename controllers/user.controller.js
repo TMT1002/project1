@@ -1,4 +1,3 @@
-const { Promise } = require('sequelize');
 const { questions, answers, results, data } = require('../models');
 
 //GET all question
@@ -14,46 +13,33 @@ const getAllQuestion = async (req, res) => {
   }
 };
 
-// CREATE answer
-const createAnswer = async (req,res) => {
+//Create answer
+const submit = async (req,res) => {
   try {
-    let checkAnswer = 1, select = [], answer_true = [];
-    const {user_id,answer} = req.body.message;
-    await results.destroy({ where: {user_id: user_id } });
-    for(let i = answer.length - 1; i >=0; i--){
-      await results.create({
-        user_id: user_id,
-        questions_id: answer[i].question_id,
-        answer_id: answer[i].answer_id,
-        user_choice: answer[i].user_choice
-      });
-      const check = await answers.findAll({where: {question_id: [answer[i].question_id], answer_id: [answer[i].answer_id] }}); 
-      if(check[0].dataValues.correct != answer[i].user_choice){
-        checkAnswer = 0;
-      }
-      if(check[0].dataValues.correct)
-      answer_true.push(check[0].dataValues.answer_id);
-      if(answer[i].user_choice == true)
-      select.push(answer[i].answer_id);
-      if(answer[i].answer_id == 1){
-        await data.destroy({ where: {user_id: user_id,question_id: answer[i].question_id} });
-        await data.create({
-          user_id: user_id,
-          question_id: answer[i].question_id,
-          user_choice: String(select),
-          answer_correct: String(answer_true),
-          correct : checkAnswer
+    const {userId,answerQuestions} = req.body;
+    const result = await Promise.all(answerQuestions.map(async (answer) => {
+      return new Promise(async(resolve,reject) => {
+        const correctAnswers = await answers.findAll({where: {question_id:answer.question_id,correct:true}});
+        const correctChoices = correctAnswers.map(value => value.answer_id).sort();
+        let check = (correctChoices.length == answer.choices.length) && (answer.choices.sort().every((value,index) => value === correctChoices[index]))  
+        const newData = await data.create({
+          user_id: userId,
+          question_id: answer.question_id,
+          user_choice: JSON.stringify(answer.choices),
+          correct_answer: JSON.stringify(correctChoices),
+          correct: check
         });
-        console.log(select);
-        checkAnswer = 1;
-        select = [], answer_true = [];
-      }
-    }
-    res.status(200).json("Created answer successfully!");
+        return resolve(newData);
+      })
+    }))
+    return result;
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
-};
+}
+
+
 
 //GET results
 const getResult = async (req,res) => {
@@ -82,6 +68,5 @@ const getResult = async (req,res) => {
 }
 
 
-module.exports = {getAllQuestion,createAnswer,getResult};
-
+module.exports = {getAllQuestion,getResult,submit};
 

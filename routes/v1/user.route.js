@@ -19,7 +19,7 @@ router.delete(
   adminController.deleteUserById,
 );
 //CREATE answer
-router.post('/createAnswer',middlewareController.verifyToken,userController.createAnswer);
+router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
 
 //Request refresh token
 router.post('/reqToken',authController.reqRefreshToken);

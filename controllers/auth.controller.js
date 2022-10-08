@@ -3,6 +3,7 @@ const { users } = require('../models');
 const jwt = require('jsonwebtoken');
 const { session } = require('../models');
 const { authService} = require('../services');
+const { generateAccessToken, generateRefreshToken, saveRefreshTokenInCookie } = require('../services/auth.service');
 
 const registerUser = async (req, res) => {
   try {
@@ -28,7 +29,6 @@ const loginUser = async (req, res) => {
       }
       if(validPassword) {
         const deleteToken = await session.destroy({ where: { user_id: user.id } });
-
         const newAccessToken = authService.generateAccessToken(user);
         const newRefreshToken = authService.generateRefreshToken(user);
         authService.saveRefreshTokenInCookie(res,newRefreshToken);
@@ -37,6 +37,8 @@ const loginUser = async (req, res) => {
           refresh_token: newRefreshToken,
           access_token: newAccessToken,
         });
+        // req["currentUser"] = user.dataValues;
+        console.log(req.currentUser);
         res.status(200).json({user,newAccessToken,newRefreshToken});
       }
     }
@@ -53,27 +55,9 @@ const reqRefreshToken = async (req,res) => {
     jwt.verify(refreshToken,process.env.REFRESH_TOKEN, async (err,user) => {
       if(err) console.log(err);
       const deleteToken = await session.destroy({ where: { user_id: user.id } });
-      const newAccessToken = await jwt.sign(
-        {
-          id: user.id,
-          admin: user.admin,
-        },
-        process.env.ACCESS_TOKEN,
-        { expiresIn: '15s' },
-      );
-      const newRefreshToken = await jwt.sign(
-        {
-          id: user.id,
-          admin: user.admin,
-        },
-        process.env.REFRESH_TOKEN,
-        { expiresIn: '7d' },
-      );
-      const createSession = await session.create({
-        user_id: user.id,
-        refresh_token: newRefreshToken,
-        access_token: newAccessToken,
-      });
+      const newAccessToken = generateAccessToken(user);
+      const newRefreshToken = generateRefreshToken(user)
+      await saveRefreshTokenInCookie(res,refreshToken);
       res.status(200).send({accessToken: newAccessToken});
     })
   } catch (error) {

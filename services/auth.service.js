@@ -8,7 +8,7 @@ const generateAccessToken = (user) => {
         admin: user.admin,
       },
       process.env.ACCESS_TOKEN,
-      { expiresIn: '30s' },
+      { expiresIn: '2h' },
     );
 }
 
