@@ -18,13 +18,13 @@ const registerUser = async (req, res) => {
       }
     })
     if(checkEmail.length){ 
-      return res.status(400).json("Email or Account already exists!");
+      return res.status(400).json({message: "Email or Account already exists!"});
     }
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashed;
     const newUser = await users.create({ ...req.body });
-    res.status(200).json(newUser);
+    res.status(200).json({message: "Register is successfully!",data: newUser});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -36,11 +36,11 @@ const loginUser = async (req, res) => {
   try {
     const user = await users.findOne({ where: { account: req.body.account } });
     if (!user) {
-      res.status(404).json('Wrong account!');
+      res.status(404).json({message: 'Wrong account!'});
     } else {
       const validPassword = await bcrypt.compare(req.body.password, user.password);
       if (!validPassword) {
-        res.status(404).json('Wrong password!');
+        res.status(404).json({message: 'Wrong password!'});
       }
       if(validPassword) {
         const deleteToken = await session.destroy({ where: { user_id: user.id } });
@@ -52,7 +52,7 @@ const loginUser = async (req, res) => {
           refresh_token: newRefreshToken,
           access_token: newAccessToken,
         });
-        res.status(200).json({user,newAccessToken,newRefreshToken});
+        res.status(200).json({message: "Login is successfully!",user,newAccessToken,newRefreshToken});
       }
     };
   } catch (error) {
@@ -64,7 +64,7 @@ const loginUser = async (req, res) => {
 const reqRefreshToken = async (req,res) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-    if(!refreshToken) return res.status(401).json("you are not authentication");
+    if(!refreshToken) return res.status(401).json({message: "you are not authentication"});
     jwt.verify(refreshToken,process.env.REFRESH_TOKEN, async (err,user) => {
       if(err) console.log(err);
       const deleteToken = await session.destroy({ where: { user_id: user.id } });

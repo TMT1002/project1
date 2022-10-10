@@ -7,7 +7,7 @@ const userValidation = require('../../validations/user.validation');
 
 //CREATE Question
 router.post(
-  '/admin/createQuestion',
+  '/admin/createQuestion',validate(userValidation.addQuestions),
   middlewareController.verifyTokenAdmin,
   adminController.createQuestion,
 );

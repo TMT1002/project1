@@ -1,6 +1,6 @@
 const { questions, answers, results, data, session} = require('../models');
 
-
+// get user choice, correct answer, is correct
 const getResultAnswersInSession = async (req,session) => {
     const results = await data.findAll({
         attributes: ["question_id","user_choice","answer_correct","correct"],
@@ -10,7 +10,7 @@ const getResultAnswersInSession = async (req,session) => {
     });
     return results
 }
-// lấy data các câu hỏi, user choice, correct answer
+// get content question and answers for question by question id
 const getDataQuestions = async (getResultAnswersInSession) => {
     return await Promise.all(getResultAnswersInSession.map(async (value)=> {
         return new Promise(async(resolve,reject) => {
@@ -35,4 +35,9 @@ const getDataQuestions = async (getResultAnswersInSession) => {
       }));
 }
 
-  module.exports = {getResultAnswersInSession,getDataQuestions};
+//get all questions 
+const getAllQuestion = async () => {
+
+}
+
+  module.exports = {getResultAnswersInSession,getDataQuestions,getAllQuestion};
