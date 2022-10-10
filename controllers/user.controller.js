@@ -1,4 +1,5 @@
 const { questions, answers, results, data, session} = require('../models');
+const {userService} = require('../services')
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -20,7 +21,6 @@ const submit = async (req,res) => {
     const sessionAnswer = await data.findOne({where: {user_id: userId}, order: [["session","DESC"]]});
     let countSession = 0, countQuestion = 0, countCorrectAnswer = 0;
     if(sessionAnswer) countSession = sessionAnswer.dataValues.session + 1;
-
     const result = await Promise.all(answerQuestions.map(async (answer) => {
       return new Promise(async(resolve,reject) => {
         countQuestion++;
@@ -62,38 +62,12 @@ const getResults = async (req,res) => {
     });
     const getResultBySession = await Promise.all(getAllResultById.map(async(currentValue)=> {
       return new Promise(async(resolve,reject) => {
-        const getResultAnswersInSession = await data.findAll({
-          attributes: ["question_id","user_choice","answer_correct","correct"],
-          where: {
-            session: currentValue.dataValues.session, user_id: req.user.id
-          }
-        });
-        const val = await Promise.all(getResultAnswersInSession.map(async (value)=> {
-          return new Promise(async(resolve,reject) => {
-            let resultAnswer = value.dataValues;
-            const getQuestions = await questions.findAll({
-              where: {
-                id: resultAnswer.question_id
-              }
-            });
-            const getAnswer = await answers.findAll({
-              order: [["answer_id","ASC"]],
-              where: {
-                question_id : resultAnswer.question_id
-              }
-            })
-            console.log(getAnswer);
-            const contentAnswer = getAnswer.map((currentValue) => currentValue.content)
-            const contentQuestion = getQuestions.map((currentValue) => currentValue.content);
-            resultAnswer.contentQuestion = contentQuestion[0];
-            resultAnswer.contentAnswer = contentAnswer;
-            resolve(resultAnswer);
-          })
-        }));
+        const getResultAnswersInSession = await userService.getResultAnswersInSession(req,currentValue.dataValues.session);
+        const val = await userService.getDataQuestions(getResultAnswersInSession);
         resolve({session: currentValue.dataValues.session,score: currentValue.dataValues.score , results: val});
       });
     }));
-    res.status(200).json({userID: req.user.id, data: getResultBySession});
+    res.status(200).json({message: "Get data Successfully!",userID: req.user.id, data: getResultBySession});
   } catch (error) {
     res.status(500).json(error);
   }
