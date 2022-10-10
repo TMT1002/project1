@@ -65,10 +65,31 @@ const getResults = async (req,res) => {
         const getResultAnswersInSession = await data.findAll({
           attributes: ["question_id","user_choice","answer_correct","correct"],
           where: {
-            session: currentValue.dataValues.session
+            session: currentValue.dataValues.session, user_id: req.user.id
           }
         });
-        const val = getResultAnswersInSession.map((value)=> value.dataValues);
+        const val = await Promise.all(getResultAnswersInSession.map(async (value)=> {
+          return new Promise(async(resolve,reject) => {
+            let resultAnswer = value.dataValues;
+            const getQuestions = await questions.findAll({
+              where: {
+                id: resultAnswer.question_id
+              }
+            });
+            const getAnswer = await answers.findAll({
+              order: [["answer_id","ASC"]],
+              where: {
+                question_id : resultAnswer.question_id
+              }
+            })
+            console.log(getAnswer);
+            const contentAnswer = getAnswer.map((currentValue) => currentValue.content)
+            const contentQuestion = getQuestions.map((currentValue) => currentValue.content);
+            resultAnswer.contentQuestion = contentQuestion[0];
+            resultAnswer.contentAnswer = contentAnswer;
+            resolve(resultAnswer);
+          })
+        }));
         resolve({session: currentValue.dataValues.session,score: currentValue.dataValues.score , results: val});
       });
     }));
@@ -81,6 +102,7 @@ const getResults = async (req,res) => {
 //LOGOUT user
 const logout = async (req,res) => {
   try {
+    res.clearCookie("refreshToken")
     const logout = await session.destroy({where: {user_id:req.user.id}});
     if(logout){
       res.status(200).json("Logout successfully!");
