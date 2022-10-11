@@ -1,10 +1,24 @@
 const { questions, answers, results, data, session} = require('../models');
 const {userService} = require('../services')
+const pagination = require('../services/pagination');
 
 //GET all question
 const getAllQuestion = async (req, res) => {
   try {
-    const allQuestions = await questions.findAll({ include: answers });
+    const {page,size} = req.query;
+    const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
+
+    const data = await questions.findAndCountAll({
+      attributes: ['id','content'],
+      offset: offset,
+      limit: limit,
+      include: {
+        model: answers,
+        attributes: ['answer_id','content']
+      }
+    })
+    const allQuestions = pagination.getPagingData(data, page, limit);
+
     if (!allQuestions) {
       res.status(404).json({message: "Can not get all question!"});
     }

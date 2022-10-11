@@ -76,4 +76,4 @@ const getAllResultById = async (req) => {
   }
 }
 
-  module.exports = {getResultAnswersInSession,getDataQuestions,createQuestion,getAllResultById};
+module.exports = {getResultAnswersInSession,getDataQuestions,createQuestion,getAllResultById};

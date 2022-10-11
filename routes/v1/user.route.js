@@ -20,7 +20,6 @@ router.delete(
 );
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
-
 //Request refresh token
 router.post('/reqToken',authController.reqRefreshToken);
 //LOGOUT user
