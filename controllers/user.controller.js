@@ -54,12 +54,7 @@ const submit = async (req,res) => {
 //GET results
 const getResults = async (req,res) => {
   try {
-    const getAllResultById = await results.findAll({
-      attributes: ["session","score"],
-      where: {
-        user_id: req.user.id
-      }
-    });
+    const getAllResultById = await userService.getAllResultById(req);
     const getResultBySession = await Promise.all(getAllResultById.map(async(currentValue)=> {
       return new Promise(async(resolve,reject) => {
         const getResultAnswersInSession = await userService.getResultAnswersInSession(req,currentValue.dataValues.session);

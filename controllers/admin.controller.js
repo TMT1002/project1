@@ -1,10 +1,11 @@
 const { users, questions, answers } = require('../models');
+const { userService } = require('../services');
 
 // GET All Users
 const getAllUser = async (req, res) => {
   try {
     const allUser = await users.findAll();
-    res.status(200).json(allUser);
+    res.status(200).json({message: "Successfully!",data:allUser});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -28,19 +29,9 @@ const deleteUserById = async (req, res) => {
 const createQuestion = async (req, res) => {
   try {
     const { question, answer } = req.body;
-    const newQuestion = await questions.create({
-      content: req.body.content,
-    });
-    answer.forEach(async currentValue => {
-      await answers.create({
-        question_id: newQuestion.id,
-        answer_id: currentValue.answer_id,
-        content: currentValue.content,
-        correct: currentValue.correct,
-      });
-    });
+    const newQuestion = await userService.createQuestion(req,answer);
     if (!newQuestion) {
-      res.status(404).json('Can not add new questions');
+      res.status(404).json({message: 'Can not add new questions'});
     }
     res.status(200).json({ message: 'Created Successfully!', question: req.body });
   } catch (error) {
