@@ -1,12 +1,24 @@
 const { users, questions, answers } = require('../models');
 const { userService } = require('../services');
+const pagination = require('../services/pagination');
 
 // GET All Users
 const getAllUser = async (req, res) => {
   try {
-    const allUser = await users.findAll();
-    res.status(200).json({message: "Successfully!",data:allUser});
+    const {page,size} = req.query;
+    const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
+    const data = await users.findAndCountAll({
+      offset: offset,
+      limit: limit,
+    })
+    const allUser = pagination.getPagingData(data, page, limit);
+
+    if (!allUser) {
+      res.status(404).json({message: "Can not get all users!"});
+    }
+    res.status(200).json({message: "Get data Successfully!",data: allUser});
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };

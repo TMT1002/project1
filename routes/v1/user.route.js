@@ -8,21 +8,28 @@ const validate = require('../../middleware/validation.middleware');
 const userValidation = require('../../validations/user.validation');
 
 //GET all questions
-router.get('/getAllQuestions', middlewareController.verifyToken, userController.getAllQuestion);
+router.get('/getAllQuestions',validate(userValidation.getAllQuestions),middlewareController.verifyToken, userController.getAllQuestion);
+
 //GET all user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
+
 //GET result
 router.get('/getResult',middlewareController.verifyToken,userController.getResults);
 
 //DELETE user
 router.delete('/admin/delete/:id',middlewareController.verifyTokenAdmin,adminController.deleteUserById);
+
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
-//Request refresh token
+
+//REQUEST refresh token
 router.post('/reqToken',authController.reqRefreshToken);
+
 //LOGOUT user
 router.post('/logout',middlewareController.verifyToken,userController.logout);
+
 //UPDATE user by id
 router.patch('/update',validate(userValidation.updateUser),middlewareController.verifyToken,userController.updateUser);
+
 module.exports = router;
 

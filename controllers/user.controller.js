@@ -8,7 +8,6 @@ const getAllQuestion = async (req, res) => {
   try {
     const {page,size} = req.query;
     const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
-
     const data = await questions.findAndCountAll({
       attributes: ['id','content'],
       offset: offset,

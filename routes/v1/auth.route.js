@@ -6,6 +6,7 @@ const authValidation = require('../../validations/auth.validation');
 
 //register user
 router.post('/register',validate(authValidation.register), authController.registerUser);
+
 //login user
 router.post('/login',validate(authValidation.login),authController.loginUser);
 

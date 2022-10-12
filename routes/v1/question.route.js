@@ -7,9 +7,12 @@ const userValidation = require('../../validations/user.validation');
 
 //CREATE Question
 router.post('/admin/createQuestion',validate(userValidation.addQuestions),middlewareController.verifyTokenAdmin,adminController.createQuestion);
+
 //ADD answer
 router.post('/admin/addAnswer',validate(userValidation.addAns),middlewareController.verifyTokenAdmin, adminController.addAnswer);
+
 //ADD new Questions
 router.post('/admin/addQuestion',middlewareController.verifyTokenAdmin,adminController.addQuestion);
+
 
 module.exports = router;
