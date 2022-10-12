@@ -1,4 +1,5 @@
-const { questions, answers, results, data, session} = require('../models');
+const { questions, answers, results, data, session, users} = require('../models');
+const { unlock } = require('../routes/v1/user.route');
 const {userService} = require('../services')
 const pagination = require('../services/pagination');
 
@@ -82,6 +83,28 @@ const getResults = async (req,res) => {
   }
 }
 
+//UPDATE user
+const updateUser = async (req,res) => {
+  try {
+    const updateUser = await users.update({
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email
+    },
+    {
+      where: {
+        id: req.user.id
+      }
+    });
+    if(!updateUser){
+      return res.status(404).json({message: "User not found!"});
+    }
+      return res.status(200).json({message: "Update successfully!"})
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 //LOGOUT user
 const logout = async (req,res) => {
   try {
@@ -95,5 +118,5 @@ const logout = async (req,res) => {
   }
 }
 
-module.exports = {getAllQuestion,getResults,submit,logout};
+module.exports = {getAllQuestion,getResults,submit,logout,updateUser};
 

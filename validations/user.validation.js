@@ -17,6 +17,11 @@ const addQuestions = Joi.object().keys({
         })
     )
 });
- 
 
-module.exports = {addAns,addQuestions};
+const updateUser = Joi.object().keys({ 
+    first_name : Joi.string(),
+    last_name : Joi.string(),
+    email : Joi.string(),
+});
+
+module.exports = {addAns,addQuestions,updateUser};

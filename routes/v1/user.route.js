@@ -4,6 +4,8 @@ const userController = require('../../controllers/user.controller');
 const adminController = require('../../controllers/admin.controller');
 const middlewareController = require('../../middleware/auth.middleware');
 const authController = require('../../controllers/auth.controller');
+const validate = require('../../middleware/validation.middleware');
+const userValidation = require('../../validations/user.validation');
 
 //GET all questions
 router.get('/getAllQuestions', middlewareController.verifyToken, userController.getAllQuestion);
@@ -13,17 +15,14 @@ router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminCont
 router.get('/getResult',middlewareController.verifyToken,userController.getResults);
 
 //DELETE user
-router.delete(
-  '/admin/delete/:id',
-  middlewareController.verifyTokenAdmin,
-  adminController.deleteUserById,
-);
+router.delete('/admin/delete/:id',middlewareController.verifyTokenAdmin,adminController.deleteUserById);
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
 //Request refresh token
 router.post('/reqToken',authController.reqRefreshToken);
 //LOGOUT user
 router.post('/logout',middlewareController.verifyToken,userController.logout);
-
+//UPDATE user by id
+router.patch('/update',validate(userValidation.updateUser),middlewareController.verifyToken,userController.updateUser);
 module.exports = router;
 
