@@ -14,7 +14,7 @@ const getAllUser = async (req, res) => {
     const allUser = pagination.getPagingData(data, page, limit);
 
     if (!allUser) {
-      res.status(404).json({message: "Can not get all users!"});
+      res.status(404).json({message: "Can not get all users!",data: null});
     }
     res.status(200).json({message: "Get data Successfully!",data: allUser});
   } catch (error) {
@@ -43,9 +43,9 @@ const createQuestion = async (req, res) => {
     const { question, answer } = req.body;
     const newQuestion = await userService.createQuestion(req,answer);
     if (!newQuestion) {
-      res.status(404).json({message: 'Can not add new questions'});
+      res.status(404).json({message: 'Can not add new questions', data: null});
     }
-    res.status(200).json({ message: 'Created Successfully!', question: req.body });
+    res.status(200).json({ message: 'Created Successfully!', data: req.body });
   } catch (error) {
     res.status(500).json(error);
   }
@@ -60,9 +60,9 @@ const addQuestion = async (req, res) => {
       content: req.body.content,
     });
     if (!newQuestion) {
-      res.status(404).json('Can not add new questions');
+      res.status(404).json({message: 'Can not add new questions', data: null});
     }
-    res.status(200).json('added a question');
+    res.status(200).json({message:'added a question', data: null});
   } catch (error) {
     res.status(500).json(error);
   }
@@ -74,13 +74,34 @@ const addAnswer = async (req, res) => {
     console.log(req.body);
     const newAns = await answers.create({ ...req.body });
     if (!newAns) {
-      res.status(404).json('Can not add new answer');
+      res.status(404).json({message: 'Can not add new answer', datta: null});
     }
-    res.status(200).json('added a answer');
+    res.status(200).json({message: 'added a answer', data: null});
   } catch (error) {
     res.status(500).json(error);
   }
 };
+
+const getAllQuestionsByAdmin = async (req, res) => {
+  try {
+    const {page,size} = req.query;
+    const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
+    const data = await questions.findAndCountAll({
+      offset: offset,
+      limit: limit,
+      include: {
+        model: answers
+      }
+    })
+    const allQuestions = pagination.getPagingData(data, page, limit);
+    if (!allQuestions) {
+      res.status(404).json({message: "Can not get all question!"});
+    }
+    res.status(200).json({message: "Get data Successfully!",data: allQuestions});
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
 
 module.exports = {
   getAllUser,
@@ -88,4 +109,5 @@ module.exports = {
   addQuestion,
   addAnswer,
   createQuestion,
+  getAllQuestionsByAdmin
 };

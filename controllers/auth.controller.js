@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { session,users} = require('../models');
 const { authService, userService} = require('../services');
 const { generateAccessToken, generateRefreshToken, saveRefreshTokenInCookie } = require('../services/auth.service');
-const Op = require('Sequelize').Op;
+
 
 
 //CREATE USER
@@ -35,11 +35,11 @@ const loginUser = async (req, res) => {
     if (!validPassword) 
       return res.status(404).json({message: 'Wrong password!'});  
     if(validPassword) {
-      const deleteToken = await session.destroy({ where: { user_id: user.id } });
+      await session.destroy({ where: { user_id: user.id } });
       const newAccessToken = authService.generateAccessToken(user);
       const newRefreshToken = authService.generateRefreshToken(user);
       authService.saveRefreshTokenInCookie(res,newRefreshToken);
-      const createSession = await authService.createSession(user,newRefreshToken,newAccessToken);
+      await authService.createSession(user,newRefreshToken,newAccessToken);
       return res.status(200).json({message: "Login is successfully!",user,newAccessToken,newRefreshToken});
     }
   } catch (error) {
@@ -53,12 +53,11 @@ const reqRefreshToken = async (req,res) => {
     const refreshToken = req.cookies.refreshToken;
     if(!refreshToken) return res.status(401).json({message: "You are not authentication"});
     jwt.verify(refreshToken,process.env.REFRESH_TOKEN, async (err,user) => {
-      if(err) console.log(err);
-      const deleteToken = await session.destroy({ where: { user_id: user.id } });
+      await session.destroy({ where: { user_id: user.id } });
       const newAccessToken = generateAccessToken(user);
       const newRefreshToken = generateRefreshToken(user)
-      await saveRefreshTokenInCookie(res,refreshToken);
-      const createSession = await authService.createSession(user,newRefreshToken,newAccessToken);
+      saveRefreshTokenInCookie(res,refreshToken);
+      await authService.createSession(user,newRefreshToken,newAccessToken);
       res.status(200).send({message: "Successfully!", accessToken: newAccessToken});
     })
   } catch (error) {

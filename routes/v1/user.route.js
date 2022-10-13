@@ -13,6 +13,9 @@ router.get('/getAllQuestions',validate(userValidation.getAllQuestions),middlewar
 //GET all user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
 
+//GET all questions by admin
+router.get('/admin/getAllQuestions', middlewareController.verifyTokenAdmin, adminController.getAllQuestionsByAdmin);
+
 //GET result
 router.get('/getResult',middlewareController.verifyToken,userController.getResults);
 
