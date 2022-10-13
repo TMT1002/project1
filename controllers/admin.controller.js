@@ -1,6 +1,7 @@
 const { users, questions, answers } = require('../models');
 const { userService } = require('../services');
 const pagination = require('../services/pagination');
+const response = require('../utils/responseTemp');
 
 // GET All Users
 const getAllUser = async (req, res) => {
@@ -14,11 +15,10 @@ const getAllUser = async (req, res) => {
     const allUser = pagination.getPagingData(data, page, limit);
 
     if (!allUser) {
-      res.status(404).json({message: "Can not get all users!",data: null});
+      res.status(404).json(response('Can not get all users!'));
     }
-    res.status(200).json({message: "Get data Successfully!",data: allUser});
+    res.status(200).json(response('Get data Successfully!',allUser));
   } catch (error) {
-    console.log(error);
     res.status(500).json(error);
   }
 };
@@ -28,9 +28,9 @@ const deleteUserById = async (req, res) => {
   try {
     const user = await users.destroy({ where: { id: [req.params.id] } });
     if (user) {
-      res.status(200).json(`Deleted account with id = ${req.params.id}`);
+      res.status(200).json(response(`Deleted account with id = ${req.params.id}`));
     } else {
-      res.status(404).json(`Not found account with id = ${req.params.id}`);
+      res.status(404).json(response(`Not found account with id = ${req.params.id}`));
     }
   } catch (error) {
     res.status(500).json(error);
@@ -43,9 +43,9 @@ const createQuestion = async (req, res) => {
     const { question, answer } = req.body;
     const newQuestion = await userService.createQuestion(req,answer);
     if (!newQuestion) {
-      res.status(404).json({message: 'Can not add new questions', data: null});
+      res.status(404).json(response('Can not add new questions'));
     }
-    res.status(200).json({ message: 'Created Successfully!', data: req.body });
+    res.status(200).json(response('Created Successfully!',req.body));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -60,9 +60,9 @@ const addQuestion = async (req, res) => {
       content: req.body.content,
     });
     if (!newQuestion) {
-      res.status(404).json({message: 'Can not add new questions', data: null});
+      res.status(404).json(response('Can not add new questions'));
     }
-    res.status(200).json({message:'added a question', data: null});
+    res.status(200).json(response('added a question'));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -74,9 +74,9 @@ const addAnswer = async (req, res) => {
     console.log(req.body);
     const newAns = await answers.create({ ...req.body });
     if (!newAns) {
-      res.status(404).json({message: 'Can not add new answer', datta: null});
+      res.status(404).json(response('Can not add new answer'));
     }
-    res.status(200).json({message: 'added a answer', data: null});
+    res.status(200).json(response('added a answer'));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -95,9 +95,9 @@ const getAllQuestionsByAdmin = async (req, res) => {
     })
     const allQuestions = pagination.getPagingData(data, page, limit);
     if (!allQuestions) {
-      res.status(404).json({message: "Can not get all question!"});
+      res.status(404).json(response('Can not get all question!'));
     }
-    res.status(200).json({message: "Get data Successfully!",data: allQuestions});
+    res.status(200).json(response('Get data Successfully!',allQuestions));
   } catch (error) {
     res.status(500).json(error);
   }

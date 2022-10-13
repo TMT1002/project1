@@ -1,7 +1,7 @@
 const { questions, answers, results, data, session, users} = require('../models');
-const { unlock } = require('../routes/v1/user.route');
 const {userService} = require('../services')
 const pagination = require('../services/pagination');
+const response = require('../utils/responseTemp');
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -20,9 +20,9 @@ const getAllQuestion = async (req, res) => {
     const allQuestions = pagination.getPagingData(data, page, limit);
 
     if (!allQuestions) {
-      res.status(404).json({message: "Can not get all question!"});
+      res.status(404).json(response('Can not get all question!'));
     }
-    res.status(200).json({message: "Get data Successfully!",data: allQuestions});
+    res.status(200).json(response('Get data Successfully!',allQuestions));
   } catch (error) {
     res.status(500).json(error);
   };
@@ -58,7 +58,7 @@ const submit = async (req,res) => {
       score: 100*countCorrectAnswer/countQuestion,
       session: countSession
     });
-    res.status(200).json({message: "Submit successfully"})
+    res.status(200).json(response('Submit successfully'));
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -76,7 +76,7 @@ const getResults = async (req,res) => {
         resolve({session: currentValue.dataValues.session,score: currentValue.dataValues.score , results: val});
       });
     }));
-    res.status(200).json({message: "Get data Successfully!",userID: req.user.id, data: getResultBySession});
+    res.status(200).json(response('Get data Successfully!',{userID: req.user.id, data: getResultBySession}));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -96,9 +96,9 @@ const updateUser = async (req,res) => {
       }
     });
     if(!updateUser){
-      return res.status(404).json({message: "User not found!"});
+      return res.status(404).json(response('User not found!'));
     }
-      return res.status(200).json({message: "Update successfully!"})
+      return res.status(200).json(response('Update successfully!'));
   } catch (error) {
     res.status(500).json(error);
   }
@@ -110,7 +110,7 @@ const logout = async (req,res) => {
     res.clearCookie("refreshToken")
     const logout = await session.destroy({where: {user_id:req.user.id}});
     if(logout){
-      res.status(200).json({message: "Logout successfully!"});
+      res.status(200).json(response('Logout successfully!'));
     } 
   } catch (error) {
     res.status(500).json(error);
