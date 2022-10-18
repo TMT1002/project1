@@ -26,6 +26,10 @@ const answers = sequelize.define('answers', {
     allowNull: false,
     defaultValue: false,
   },
+  image: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
 });
 
 questions.hasMany(answers, { foreignKey: 'question_id' });

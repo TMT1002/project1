@@ -18,7 +18,7 @@ const results = sequelize.define('results', {
     allowNull: false
   },
   score: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: false
   }
 });

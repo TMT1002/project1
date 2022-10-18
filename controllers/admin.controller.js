@@ -103,6 +103,8 @@ const getAllQuestionsByAdmin = async (req, res) => {
   }
 }
 
+//DELETE questions
+
 module.exports = {
   getAllUser,
   deleteUserById,
