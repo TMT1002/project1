@@ -8,7 +8,7 @@ const uploadCloud = require('../../config/cloudinary.config');
 
 //CREATE Question
 router.post('/admin/createQuestion',
-uploadCloud.array('image', 2),
+// uploadCloud.array('image', 2),
 validate(userValidation.addQuestions),
 middlewareController.verifyTokenAdmin,
 adminController.createQuestion);

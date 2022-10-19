@@ -104,6 +104,19 @@ const getAllQuestionsByAdmin = async (req, res) => {
 }
 
 //DELETE questions
+const deteleQuestionById = async (req, res) => {
+  try {
+    const findQuestionById = await questions.findOne({where: {id: [req.params.id]}});
+    if(!findQuestionById)
+    return res.status(404).json(response('Not found question!'));
+    const deleteQuestion = await questions.destroy({where: {id: [req.params.id]}});
+    if(!deleteQuestion)
+    return res.status(404).json(response('You can not delete question!'));
+    res.status(200).json(response('Deleted Successfully!'));
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
 
 module.exports = {
   getAllUser,
@@ -111,5 +124,6 @@ module.exports = {
   addQuestion,
   addAnswer,
   createQuestion,
-  getAllQuestionsByAdmin
+  getAllQuestionsByAdmin,
+  deteleQuestionById
 };

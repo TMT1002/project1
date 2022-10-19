@@ -22,6 +22,9 @@ router.get('/getResult',middlewareController.verifyToken,userController.getResul
 //DELETE user
 router.delete('/admin/delete/:id',middlewareController.verifyTokenAdmin,adminController.deleteUserById);
 
+//DELETE question by id
+router.delete('/admin/deleteQuestion/:id',middlewareController.verifyTokenAdmin,adminController.deteleQuestionById);
+
 //CREATE answer
 router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
 
