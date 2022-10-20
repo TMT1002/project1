@@ -27,7 +27,7 @@ const answers = sequelize.define('answers', {
     defaultValue: false,
   },
   image: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT,
     allowNull: true,
   }
 });

@@ -12,6 +12,10 @@ const questions = sequelize.define('questions', {
     type: DataTypes.TEXT,
     allowNull: false,
   },
+  image: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  }
 });
 
 (async function () {

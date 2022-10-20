@@ -48,6 +48,7 @@ const createQuestion = async (req,answer) => {
   try {
     const newQuestion = await questions.create({
       content: req.body.content,
+      image: req.body.image
     });
     answer.forEach(async currentValue => {
       await answers.create({
@@ -55,6 +56,7 @@ const createQuestion = async (req,answer) => {
         answer_id: currentValue.answer_id,
         content: currentValue.content,
         correct: currentValue.correct,
+        image: currentValue.image
       });
     });
     return newQuestion;

@@ -9,11 +9,13 @@ const addAns = Joi.object().keys({
 
 const addQuestions = Joi.object().keys({ 
     content : Joi.string().required(),
+    image: Joi.string(),
     answer : Joi.array().items(
         Joi.object().keys({
             answer_id : Joi.number().integer().required(),
             content : Joi.string().required(),
-            correct : Joi.boolean().required()
+            correct : Joi.boolean().required(),
+            image: Joi.string()
         })
     )
 });
