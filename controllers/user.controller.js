@@ -8,23 +8,17 @@ const getAllQuestion = async (req, res) => {
   try {
     const {page,size} = req.query;
     const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
-    const data = await questions.findAndCountAll({
-      attributes: ['id','content'],
-      offset: offset,
-      limit: limit,
-      include: {
-        model: answers,
-        attributes: ['answer_id','content']
-      }
-    })
+    const data = await userService.getQuestions(req,offset,limit);
+    console.log(data);
     const allQuestions = pagination.getPagingData(data, page, limit);
 
     if (!allQuestions) {
-      res.status(404).json(response('Can not get all question!'));
+      return res.status(404).json(response('Can not get all question!'));
+    } else{
+      res.status(200).json(response('Get data Successfully!',allQuestions));
     }
-    res.status(200).json(response('Get data Successfully!',allQuestions));
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json(`Error: ${error}`);
   };
 };
 
@@ -117,5 +111,15 @@ const logout = async (req,res) => {
   }
 }
 
-module.exports = {getAllQuestion,getResults,submit,logout,updateUser};
+//UPLOAD image
+const uploadImage = async (req, res) => {
+  try {
+    if(req.file)
+    res.status(200).json(response('Upload image is successfully!',req.file.path));
+  } catch (error) {
+    res.status(500).json(response(`Error uploading image: ${error}`));
+  }
+}
+
+module.exports = {getAllQuestion,getResults,submit,logout,updateUser,uploadImage};
 

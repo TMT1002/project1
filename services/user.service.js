@@ -1,4 +1,5 @@
 const { questions, answers, results, data, session} = require('../models');
+const response = require('../utils/responseTemp');
 
 // get user choice, correct answer, is correct
 const getResultAnswersInSession = async (req,session) => {
@@ -11,7 +12,7 @@ const getResultAnswersInSession = async (req,session) => {
     });
   return results
   } catch (error) {
-    res.status(500).json(error);
+    throw error;
   }
 }
 // get content question and answers for question by question id
@@ -39,7 +40,7 @@ const getDataQuestions = async (getResultAnswersInSession) => {
       })
     }));
   } catch (error) {
-    res.status(500).json(error)
+    throw error;
   }
 }
 
@@ -58,7 +59,7 @@ const createQuestion = async (req,answer) => {
     });
     return newQuestion;
   } catch (error) {
-    res.status(500).json(error);
+    throw error;
   }
 }
 
@@ -72,8 +73,35 @@ const getAllResultById = async (req) => {
     });
     return getAllResultById
   } catch (error) {
-    res.status(500).json(error);
+    throw error;
   }
 }
 
-module.exports = {getResultAnswersInSession,getDataQuestions,createQuestion,getAllResultById};
+const getQuestions = async (req,offset,limit) => {
+  try {
+    let attributesQuestion = {exclude: ['createdAt','updatedAt']};
+    let attributesAnswer = {exclude: ['question_id','correct','createdAt','updatedAt']};
+    if(req.user.admin){
+      attributesQuestion = {exclude: []};
+      attributesAnswer = {exclude: ['question_id']};
+    }
+    const data = await questions.findAndCountAll({
+      attributes: attributesQuestion,
+      offset: offset,
+      limit: limit,
+      include: {
+        model: answers,
+        attributes: attributesAnswer
+      }
+    })
+    return data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {
+  getResultAnswersInSession,getDataQuestions,
+  createQuestion,getAllResultById,
+  getQuestions
+};

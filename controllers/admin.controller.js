@@ -82,27 +82,6 @@ const addAnswer = async (req, res) => {
   }
 };
 
-const getAllQuestionsByAdmin = async (req, res) => {
-  try {
-    const {page,size} = req.query;
-    const { limit, offset } = pagination.getPagination(parseInt(page), parseInt(size));
-    const data = await questions.findAndCountAll({
-      offset: offset,
-      limit: limit,
-      include: {
-        model: answers
-      }
-    })
-    const allQuestions = pagination.getPagingData(data, page, limit);
-    if (!allQuestions) {
-      res.status(404).json(response('Can not get all question!'));
-    }
-    res.status(200).json(response('Get data Successfully!',allQuestions));
-  } catch (error) {
-    res.status(500).json(error);
-  }
-}
-
 //DELETE questions
 const deteleQuestionById = async (req, res) => {
   try {
@@ -124,6 +103,5 @@ module.exports = {
   addQuestion,
   addAnswer,
   createQuestion,
-  getAllQuestionsByAdmin,
   deteleQuestionById
 };

@@ -6,27 +6,29 @@ const middlewareController = require('../../middleware/auth.middleware');
 const authController = require('../../controllers/auth.controller');
 const validate = require('../../middleware/validation.middleware');
 const userValidation = require('../../validations/user.validation');
+const uploadCloud = require('../../config/cloudinary.config');
 
 //GET all questions
-router.get('/getAllQuestions',validate(userValidation.getAllQuestions),middlewareController.verifyToken, userController.getAllQuestion);
+router.get('/getAllQuestions',
+    validate(userValidation.getAllQuestions),
+    middlewareController.verifyToken, 
+    userController.getAllQuestion
+);
 
 //GET all user
 router.get('/admin/getAllUser', middlewareController.verifyTokenAdmin, adminController.getAllUser);
-
-//GET all questions by admin
-router.get('/admin/getAllQuestions', middlewareController.verifyTokenAdmin, adminController.getAllQuestionsByAdmin);
 
 //GET result
 router.get('/getResult',middlewareController.verifyToken,userController.getResults);
 
 //DELETE user
-router.delete('/admin/delete/:id',middlewareController.verifyTokenAdmin,adminController.deleteUserById);
+router.delete('/admin/deleteUser/:id',middlewareController.verifyTokenAdmin,adminController.deleteUserById);
 
 //DELETE question by id
 router.delete('/admin/deleteQuestion/:id',middlewareController.verifyTokenAdmin,adminController.deteleQuestionById);
 
 //CREATE answer
-router.post('/createAnswer',middlewareController.verifyToken,userController.submit);
+router.post('/createAnswer',middlewareController.verifyToken,userController.submit);    // thiếu validation
 
 //REQUEST refresh token
 router.post('/reqToken',authController.reqRefreshToken);
@@ -36,6 +38,13 @@ router.post('/logout',middlewareController.verifyToken,userController.logout);
 
 //UPDATE user by id
 router.patch('/update',validate(userValidation.updateUser),middlewareController.verifyToken,userController.updateUser);
+
+//UPLOAD image
+router.post('/uploadImage',
+    middlewareController.verifyToken,
+    uploadCloud.single('image'),
+    userController.uploadImage
+);
 
 module.exports = router;
 

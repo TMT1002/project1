@@ -56,7 +56,7 @@ const reqRefreshToken = async (req,res) => {
       await session.destroy({ where: { user_id: user.id } });
       const newAccessToken = generateAccessToken(user);
       const newRefreshToken = generateRefreshToken(user)
-      saveRefreshTokenInCookie(res,refreshToken);
+      saveRefreshTokenInCookie(res,newRefreshToken);
       await authService.createSession(user,newRefreshToken,newAccessToken);
       res.status(200).send(response('Successfully!',newAccessToken));
     })

@@ -13,7 +13,7 @@ const generateAccessToken = (user) => {
             { expiresIn: '2h' },
         );
     } catch (error) {
-        res.status(500).json(error);
+        throw error;
     }
 }
 
@@ -28,7 +28,7 @@ const generateRefreshToken = (user) => {
             { expiresIn: '7d' },
         );
     } catch (error) {
-        res.status(500).json(error);
+        throw error;
     }
 }
 
@@ -41,7 +41,7 @@ const saveRefreshTokenInCookie = (res,refreshToken) => {
             sameSite: "strict"
         });
     } catch (error) {
-        res.status(500).json(error);
+        throw error;
     }
 }
 
@@ -57,7 +57,7 @@ const checkEmail = async(req) => {
         })
         return checkEmail;
     } catch (error) {
-        res.status(500).json(error);
+        throw error;
     }
 }
 
@@ -70,7 +70,7 @@ const createSession = async (user,newRefreshToken,newAccessToken) => {
         });
         return createSession
     } catch (error) {
-        res.status(500).json(error);
+        throw error;
     }
 }
 
