@@ -5,7 +5,8 @@ const register = Joi.object().keys({
     last_name: Joi.string().min(1).max(20).required(),
     email: Joi.string().min(5).max(50).required(),
     account: Joi.string().min(5).max(50).required(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
+    avatar: Joi.string()
 });
 
 const login = Joi.object().keys({ 

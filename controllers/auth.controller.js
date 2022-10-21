@@ -1,9 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { session,users} = require('../models');
+const { session,users,verifyTokens} = require('../models');
 const { authService, userService} = require('../services');
 const { generateAccessToken, generateRefreshToken, saveRefreshTokenInCookie } = require('../services/auth.service');
 const response = require('../utils/responseTemp');
+const mailer = require('../utils/mailer');
+require('dotenv').config();
 
 
 //CREATE USER
@@ -17,8 +19,26 @@ const registerUser = async (req, res) => {
     const hashed = await bcrypt.hash(req.body.password, salt);
     req.body.password = hashed;
     const newUser = await users.create({ ...req.body });
-    res.status(200).json(response('Register is successfully!',newUser));
+    if(!newUser){
+      res.status(400).json(response('Can not create User'))
+    }
+    const verifyToken = jwt.sign(
+      {
+        id: newUser.id,
+        email: req.body.email
+      },
+      process.env.VERIFY_TOKEN,
+      { expiresIn: '2h' },
+    );
+    await verifyTokens.create({
+      verifyToken: verifyToken,
+      user_id: newUser.id,
+      email: newUser.email
+    });
+    const sendEmail = await mailer.sendMail(req.body.email,'Verify Email',`Click: ${verifyToken}`);
+    return res.status(200).json(response('Register is successfully!',newUser)); 
   } catch (error) {
+    console.log(error);
     res.status(500).json(error);
   }
 };

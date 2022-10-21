@@ -82,7 +82,8 @@ const updateUser = async (req,res) => {
     const updateUser = await users.update({
       first_name: req.body.first_name,
       last_name: req.body.last_name,
-      email: req.body.email
+      email: req.body.email,
+      avatar: req.body.avatar
     },
     {
       where: {

@@ -1,9 +1,8 @@
 const nodemailer =  require('nodemailer'); 
 // const mailConfig = require('../config/mail.config');
 
-const sendMail = async (to,subject) => {
+const sendMail = async (to,subject,text) => {
     try {
-        let testAccount = await nodemailer.createTestAccount();
         let transporter = nodemailer.createTransport({
             service: "Gmail",
             auth: {
@@ -15,7 +14,7 @@ const sendMail = async (to,subject) => {
             from: 'Tran Minh Thuyet',
             to: to,
             subject: subject,
-            text: 'You recieved message from '
+            text: text
         }
         return await transporter.sendMail(info);
     } catch (error) {

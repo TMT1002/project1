@@ -49,5 +49,7 @@ router.post('/uploadImage',
 
 router.post('/verifyEmail', middlewareController.verifyToken, emailController.verifyEmail);
 
+router.get('/confirmationEmail',emailController.confirmationEmail);
+
 module.exports = router;
 

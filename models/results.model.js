@@ -1,6 +1,6 @@
 const { DataTypes } = require('sequelize');
 const { sequelize } = require('./connectionDB');
-const { users, questions, answers } = require('./index');
+const { users } = require('./index');
 
 const results = sequelize.define('results', {
   id: {

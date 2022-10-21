@@ -34,12 +34,12 @@ const users = sequelize.define('users', {
     defaultValue: false,
   },
   emailVerify: {
-    type: DataTypes.DATE,
+    type: DataTypes.BOOLEAN,
     allowNull: true,
   },
   avatar: {
     type: DataTypes.TEXT,
-    allowNull: true,
+    allowNull: true
   }
 });
 

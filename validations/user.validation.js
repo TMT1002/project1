@@ -23,7 +23,8 @@ const addQuestions = Joi.object().keys({
 const updateUser = Joi.object().keys({ 
     first_name : Joi.string().optional(),
     last_name : Joi.string().optional(),
-    email : Joi.string().optional()
+    email : Joi.string().optional(),
+    avatar: Joi.string().optional()
 });
 
 const getAllQuestions = Joi.object().keys({
