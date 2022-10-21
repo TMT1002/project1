@@ -33,6 +33,14 @@ const users = sequelize.define('users', {
     allowNull: true,
     defaultValue: false,
   },
+  emailVerify: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+  avatar: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  }
 });
 
 (async function () {

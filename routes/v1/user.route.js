@@ -2,6 +2,7 @@ const { Router } = require('express');
 const router = Router();
 const userController = require('../../controllers/user.controller');
 const adminController = require('../../controllers/admin.controller');
+const emailController = require('../../controllers/email.controller');
 const middlewareController = require('../../middleware/auth.middleware');
 const authController = require('../../controllers/auth.controller');
 const validate = require('../../middleware/validation.middleware');
@@ -45,6 +46,8 @@ router.post('/uploadImage',
     uploadCloud.single('image'),
     userController.uploadImage
 );
+
+router.post('/verifyEmail', middlewareController.verifyToken, emailController.verifyEmail);
 
 module.exports = router;
 
