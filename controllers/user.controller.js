@@ -159,7 +159,7 @@ const resetPassword = async (req, res) => {
     jwt.verify(req.query.token, process.env.FORGOT_PASSWORD, async (err, data) => {
       if (err) return res.status(403).json(response('Token has expired'));
       const salt = await bcrypt.genSalt(10);
-      const newPassword = await bcrypt.hash('default', salt);
+      const newPassword = bcrypt.hash(process.env.DEFAULT_PASSWORD, salt);
       await users.update({password: newPassword},
       { where: { email: data.email }})
       res.status(200).json(response('Reset password successfully!'));
@@ -169,11 +169,26 @@ const resetPassword = async (req, res) => {
   }
 }
 
+//update password
+const updatePassword = async (req, res) => {
+  try {
+    console.log(req.body.password)
+    const salt = await bcrypt.genSalt(10);
+    const newPassword = await bcrypt.hash(req.body.password, salt);
+    await users.update({password: newPassword},{ where: { id: req.user.id }})
+    res.status(200).json(response('Updated password successfully!'));
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(response(`Error: ${error}`));
+  }
+}
+
+
 module.exports = {
   getAllQuestion,getResults,
   submit,logout,
   updateUser,uploadImage,
   getMyInfo, forgotPassword,
-  resetPassword
+  resetPassword,updatePassword
 };
 

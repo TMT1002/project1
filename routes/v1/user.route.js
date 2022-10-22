@@ -63,5 +63,8 @@ router.post('/verifyEmail', middlewareController.verifyToken, emailController.ve
 //Confirm email
 router.get('/confirmationEmail', emailController.confirmationEmail);
 
+//UpdatePassword
+router.post('/updatePassword', middlewareController.verifyToken, userController.updatePassword);
+
 module.exports = router;
 
