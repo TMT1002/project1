@@ -21,7 +21,7 @@ const verifyEmail = async (req,res) => {
             user_id: req.user.id,
             email: user.email
           });
-        await mailer.sendMail(user.email,'verifyEmail',`http://localhost:8000/v1/user/confirmationEmail?token=${verifyToken}`);
+        await mailer.sendMail(user.email,'Verify Email',`http://localhost:8000/v1/user/confirmationEmail?token=${verifyToken}`);
         res.status(200).json(response('Successfully!'));
     } catch (error) {
         res.status(500).json(response(error));

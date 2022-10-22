@@ -1,7 +1,22 @@
-const { questions, answers, results, data, session, users} = require('../models');
+const { answers, results, data, session, users} = require('../models');
 const {userService} = require('../services')
 const pagination = require('../services/pagination');
 const response = require('../utils/responseTemp');
+const mailer = require('../utils/mailer');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+require('dotenv').config();
+
+//GET myInfo
+const getMyInfo = async (req,res) => {
+  try {
+    const myInfo = await users.findOne({where: {id: req.user.id}});
+    const {password,...data} = myInfo.dataValues;
+    res.status(200).json(response("Get info successfully!",data))
+  } catch (error) {
+    res.status(500).json(`Error: ${error}`);
+  }
+}
 
 //GET all question
 const getAllQuestion = async (req, res) => {
@@ -122,5 +137,43 @@ const uploadImage = async (req, res) => {
   }
 }
 
-module.exports = {getAllQuestion,getResults,submit,logout,updateUser,uploadImage};
+//Forgot Password
+const forgotPassword = async (req, res) => {
+  try {
+    const findEmail = await users.findOne({where: {email: req.body.email}});
+    if (!findEmail) return res.status(404).json(response('Wrong email !'))
+    const forgotPassword = jwt.sign({email: req.body.email},
+      process.env.FORGOT_PASSWORD,
+      { expiresIn: '2h' },
+    );
+    await mailer.sendMail(req.body.email,'Reset Password',`http://localhost:8000/v1/user/forgot?token=${forgotPassword}`);
+    res.status(200).json(response('Sended Successfully!'));
+  } catch (error) {
+    res.status(500).json(response(`Error: ${error}`));
+  }
+}
+
+//Reset Password
+const resetPassword = async (req, res) => {
+  try {
+    jwt.verify(req.query.token, process.env.FORGOT_PASSWORD, async (err, data) => {
+      if (err) return res.status(403).json(response('Token has expired'));
+      const salt = await bcrypt.genSalt(10);
+      const newPassword = await bcrypt.hash('default', salt);
+      await users.update({password: newPassword},
+      { where: { email: data.email }})
+      res.status(200).json(response('Reset password successfully!'));
+    });
+  } catch (error) {
+    res.status(500).json(response(`Error: ${error}`));
+  }
+}
+
+module.exports = {
+  getAllQuestion,getResults,
+  submit,logout,
+  updateUser,uploadImage,
+  getMyInfo, forgotPassword,
+  resetPassword
+};
 

@@ -35,7 +35,7 @@ const registerUser = async (req, res) => {
       user_id: newUser.id,
       email: newUser.email
     });
-    const sendEmail = await mailer.sendMail(req.body.email,'Verify Email',`Click: ${verifyToken}`);
+    await mailer.sendMail(req.body.email,'Verify Email',`http://localhost:8000/v1/user/confirmationEmail?token=${verifyToken}`);
     return res.status(200).json(response('Register is successfully!',newUser)); 
   } catch (error) {
     console.log(error);

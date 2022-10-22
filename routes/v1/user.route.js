@@ -9,6 +9,10 @@ const validate = require('../../middleware/validation.middleware');
 const userValidation = require('../../validations/user.validation');
 const uploadCloud = require('../../config/cloudinary.config');
 
+
+//GET myInfo
+router.get('/myInfo',middlewareController.verifyToken,userController.getMyInfo);
+
 //GET all questions
 router.get('/getAllQuestions',
     validate(userValidation.getAllQuestions),
@@ -38,7 +42,7 @@ router.post('/reqToken',authController.reqRefreshToken);
 router.post('/logout',middlewareController.verifyToken,userController.logout);
 
 //UPDATE user by id
-router.patch('/update',validate(userValidation.updateUser),middlewareController.verifyToken,userController.updateUser);
+router.patch('/update',validate(userValidation.updateUser),middlewareController.verifyToken, userController.updateUser);
 
 //UPLOAD image
 router.post('/uploadImage',
@@ -47,9 +51,17 @@ router.post('/uploadImage',
     userController.uploadImage
 );
 
+//forgot password
+router.post('/forgot', userController.forgotPassword);
+
+//reset password
+router.get('/resetPassword', userController.resetPassword)
+
+//Send email verify
 router.post('/verifyEmail', middlewareController.verifyToken, emailController.verifyEmail);
 
-router.get('/confirmationEmail',emailController.confirmationEmail);
+//Confirm email
+router.get('/confirmationEmail', emailController.confirmationEmail);
 
 module.exports = router;
 
